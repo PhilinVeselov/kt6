@@ -1,0 +1,205 @@
+﻿@page "/projectssss"
+@inject HttpClient HttpClient
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@using System.IdentityModel.Tokens.Jwt
+@using System.Net.Http.Headers
+@using Newtonsoft.Json
+
+<h3>Проекты</h3>
+
+@if (ProjectList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (ProjectList.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in ProjectList)
+            {
+                <tr>
+                    <td>@project.ProjectName</td>
+                    <td>@project.Description</td>
+                    <td>@project.Status</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => OpenSettings(project.ProjectId)">Настройки</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Нет проектов.</p>
+}
+
+<h3>Создать новый проект</h3>
+<div class="form-group">
+    <label for="projectName">Название проекта</label>
+    <input id="projectName" type="text" class="form-control" @bind="NewProject.ProjectName" />
+</div>
+<div class="form-group">
+    <label for="description">Описание</label>
+    <textarea id="description" class="form-control" @bind="NewProject.Description"></textarea>
+</div>
+<div class="form-group">
+    <button class="btn btn-success" @onclick="CreateProject">Создать проект</button>
+</div>
+
+@code {
+    public class ProjectModel
+    {
+        public int ProjectId { get; set; }
+        public string ProjectName { get; set; }
+        public string Description { get; set; }
+        public string Status { get; set; }
+        public int UserId { get; set; }
+    }
+
+    private List<ProjectModel> ProjectList;
+    private ProjectModel NewProject = new ProjectModel();
+
+    private int CurrentUserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUser();
+        await LoadProjects();
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        try
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "token");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadJwtToken(token);
+            CurrentUserId = Convert.ToInt32(jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error loading current user: " + ex.Message);
+        }
+    }
+
+    private async Task LoadProjects()
+    {
+        try
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", new object[] { "token" });
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await HttpClient.GetAsync("https://localhost:7129/auth/projects");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var responseObject = JsonConvert.DeserializeObject<ApiResponse>(content);
+
+                if (responseObject.Status == "success")
+                {
+                    if (responseObject.Projects != null)
+                    {
+                        ProjectList = responseObject.Projects.Where(p => p.UserId == CurrentUserId || p.Status == "Админ").ToList();
+                    }
+                }
+                else
+                {
+                    ProjectList = new List<ProjectModel>();
+                }
+            }
+            else
+            {
+                ProjectList = new List<ProjectModel>();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error loading projects: " + ex.Message);
+        }
+    }
+    public class CreateProjectRequest
+    {
+        public string ProjectName { get; set; }
+        public string Description { get; set; }
+        public string Status { get; set; } // Добавляем поле Status
+    }
+
+    public class ApiResponse
+    {
+        public string Status { get; set; }
+        public string Message { get; set; } // Добавляем свойство Message
+        public int ProjectId { get; set; } // Добавим поле ProjectId
+        public List<ProjectModel> Projects { get; set; }
+    }
+
+    private async Task CreateProject()
+    {
+        try
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "token");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            // Создаем объект запроса с заполненными данными, включая статус "На рассмотрении"
+            var request = new CreateProjectRequest
+            {
+                ProjectName = NewProject.ProjectName,
+                Description = NewProject.Description,
+                Status = "На рассмотрении"
+            };
+
+            var json = JsonConvert.SerializeObject(request);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            var response = await HttpClient.PostAsync("https://localhost:7129/auth/create_project", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                var responseObject = JsonConvert.DeserializeObject<ApiResponse>(result);
+
+                if (responseObject.Status == "success")
+                {
+                    await LoadProjects(); // Перезагрузка списка проектов после успешного создания проекта
+                    NavigationManager.NavigateTo($"/projectssss");
+                }
+                else
+                {
+                    ShowDialog("Ошибка создания проекта: " + responseObject.Message);
+                }
+            }
+            else
+            {
+                ShowDialog("Ошибка создания проекта");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error creating project: " + ex.Message);
+        }
+    }
+
+
+    private void OpenSettings(int projectId)
+    {
+        Console.WriteLine($"Opening settings for project with id: {projectId}");
+        NavigationManager.NavigateTo($"/project-settings/{projectId}");
+    }
+
+    // Добавляем метод ShowDialog
+    private void ShowDialog(string message)
+    {
+        // Реализация метода показа диалога, например, с использованием JavaScript
+        // В данном примере необходимо использовать JSInterop
+    }
+}

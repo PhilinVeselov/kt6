@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "Hash": "zHon+fwMouIugp+nslgap/ZgVDcOw97TEFzz0TeXieQ=",
+  "Source": "kt6",
+  "BasePath": "_content/kt6",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "kt6/wwwroot",
+      "Source": "kt6",
+      "ContentRoot": "/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/kt6/wwwroot/",
+      "BasePath": "_content/kt6",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/kt6/wwwroot/.DS_Store",
+      "SourceId": "kt6",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/kt6/wwwroot/",
+      "BasePath": "_content/kt6",
+      "RelativePath": ".DS_Store",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/.DS_Store"
+    },
+    {
+      "Identity": "/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/kt6/wwwroot/fonts/Montserrat-Italic-VariableFont_wght.ttf",
+      "SourceId": "kt6",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/kt6/wwwroot/",
+      "BasePath": "_content/kt6",
+      "RelativePath": "fonts/Montserrat-Italic-VariableFont_wght.ttf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/fonts/Montserrat-Italic-VariableFont_wght.ttf"
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+﻿@page "/users"
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Net.Http.Headers
+@inject IJSRuntime JSRuntime
+@using Newtonsoft.Json
+@using System.IdentityModel.Tokens.Jwt
+
+<h3>Пользователи</h3>
+
+@if (UserList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (UserList.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Email</th>
+                <th>Статус</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in UserList)
+            {
+                <tr>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.Email</td>
+                    <td>@user.Status</td>
+                    <td><button class="btn btn-danger" @onclick="() => DeleteUser(user.UserId)">Удалить</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Нет пользователей.</p>
+}
+
+@code {
+    public class UserModel
+    {
+        public int UserId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string Status { get; set; }
+    }
+
+    private int CurrentUserId; // Идентификатор текущего пользователя
+
+    // Инициализация переменной UserList
+    private List<UserModel> UserList;
+
+    [Inject]
+    private HttpClient HttpClient { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUser();
+        await LoadUsers();
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        try
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "token");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadJwtToken(token);
+
+            // Получение идентификатора пользователя из токена
+            var userIdClaim = jsonToken.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+
+            if (!string.IsNullOrEmpty(userIdClaim))
+            {
+                CurrentUserId = Convert.ToInt32(userIdClaim);
+                Console.WriteLine("CurrentUserId: " + CurrentUserId);
+            }
+            else
+            {
+                Console.WriteLine("Error: UserId claim is empty or null.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Обработка ошибки
+            Console.WriteLine("Error loading current user: " + ex.Message);
+        }
+    }
+
+
+
+
+    private async Task LoadUsers()
+    {
+        try
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", new object[] { "token" });
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            // Получение пользователей из API
+            var response = await HttpClient.GetAsync("https://localhost:7129/auth/users");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var responseObject = JsonConvert.DeserializeObject<ApiResponse>(content);
+
+                if (responseObject.Status == "success")
+                {
+                    UserList = responseObject.Users;
+                }
+                else
+                {
+                    UserList = new List<UserModel>(); // Или обработайте другие случаи возвращаемого статуса
+                }
+            }
+            else
+            {
+                UserList = new List<UserModel>(); // Если запрос завершился неудачно, инициализируем пустой список
+            }
+        }
+        catch (Exception ex)
+        {
+            // Обработка ошибки
+            Console.WriteLine("Error loading users: " + ex.Message);
+        }
+    }
+
+    public class ApiResponse
+    {
+        public string Status { get; set; }
+        public List<UserModel> Users { get; set; }
+    }
+
+    private async Task DeleteUser(int userId)
+    {
+        try
+        {
+            // Проверяем, не пытается ли пользователь удалить самого себя
+            if (userId == CurrentUserId)
+            {
+                Console.WriteLine("Error deleting user: Cannot delete yourself.");
+                return;
+            }
+
+            var response = await HttpClient.DeleteAsync($"https://localhost:7129/auth/users/{userId}");
+
+            // Если запрос на удаление успешен, удаляем пользователя из списка
+            if (response.IsSuccessStatusCode)
+            {
+                var userToRemove = UserList.FirstOrDefault(u => u.UserId == userId);
+                if (userToRemove != null)
+                {
+                    UserList.Remove(userToRemove);
+                }
+            }
+            else
+            {
+                // Обработка ошибки удаления пользователя
+                Console.WriteLine("Error deleting user: " + response.ReasonPhrase);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Обработка ошибки
+            Console.WriteLine("Error deleting user: " + ex.Message);
+        }
+    }
+
+}

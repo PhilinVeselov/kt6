@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/kt6.props" />
+</Project>

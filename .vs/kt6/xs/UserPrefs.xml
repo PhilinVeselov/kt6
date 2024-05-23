@@ -1,0 +1,71 @@
+﻿<Properties StartupConfiguration="kt">
+  <MonoDevelop.Ide.ItemProperties.web__new2 PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MultiItemStartupConfigurations>
+    <MultiItemSolutionRunConfiguration Id="kt" Name="kt">
+      <Items>
+        <StartupItem ItemId="{63E5E050-8365-41F0-B23E-96003359869F}" ItemName="kt6" ConfigurationId="https" />
+        <StartupItem ItemId="{C4A1600C-0BB8-4F51-BDE6-A539F56A5D04}" ItemName="web_new2" ConfigurationId="https" />
+      </Items>
+    </MultiItemSolutionRunConfiguration>
+  </MultiItemStartupConfigurations>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workbench ActiveDocument="web_new2/Program.cs">
+    <Files>
+      <File FileName="web_new/Views/BlazorComponents/Menu.razor" Line="7" Column="1" />
+      <File FileName="web_new/Program.cs" Line="39" Column="11" />
+      <File FileName="kt6/Controllers/ProjectsController.cs" Line="355" Column="1" />
+      <File FileName="web_new/Views/Home/Index.cshtml" Line="11" Column="24" />
+      <File FileName="web_new2/Pages/Index.razor" Line="9" Column="14" />
+      <File FileName="web_new2/Shared/MainLayout.razor" Line="12" Column="1" />
+      <File FileName="web_new2/Shared/NavMenu.razor" Line="87" Column="1" />
+      <File FileName="web_new2/Pages/Login.razor" Line="121" Column="69" />
+      <File FileName="kt6/Program.cs" Line="52" Column="38" />
+      <File FileName="web_new2/Shared/SurveyPrompt.razor" Line="1" Column="1" />
+      <File FileName="web_new/Views/Home/Login.cshtml" Line="96" Column="1" />
+      <File FileName="web_new2/Pages/Login (копия).razor" Line="179" Column="1" />
+      <File FileName="kt6/Models/User.cs" Line="64" Column="47" />
+      <File FileName="web_new2/Program.cs" Line="24" Column="1" />
+      <File FileName="web_new2/_Imports.razor" Line="12" Column="1" />
+      <File FileName="web_new2/App.razor" Line="14" Column="1" />
+      <File FileName="web_new2/Properties/launchSettings.json" Line="1" Column="1" />
+      <File FileName="web_new2/wwwroot/index.html" Line="25" Column="13" />
+      <File FileName="web_new2/wwwroot/sample-data/weather.json" Line="1" Column="1" />
+      <File FileName="web_new2/Pages/Projects.razor" Line="138" Column="18" />
+      <File FileName="web_new2/Pages/ProjectSettings.razor" Line="2" Column="1" />
+      <File FileName="web_new2/Pages/ProjectModel.cs" Line="22" Column="34" />
+      <File FileName="kt6/Data/ApplicationDbContext.cs" Line="1" Column="1" />
+      <File FileName="web_new2/Pages/Profile.razor" Line="131" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="kt6">
+            <Node name="kt6">
+              <Node name="Controllers" expanded="True" />
+              <Node name="Data" expanded="True" />
+              <Node name="Models" expanded="True" />
+            </Node>
+            <Node name="web_new2">
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+              <Node name="Pages" expanded="True" />
+              <Node name="Shared" expanded="True" />
+              <Node name="wwwroot" expanded="True" />
+              <Node name="Program.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.web__new PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.ItemProperties.kt6 PreferredExecutionTarget="/Applications/Google Chrome.app" />
+</Properties>

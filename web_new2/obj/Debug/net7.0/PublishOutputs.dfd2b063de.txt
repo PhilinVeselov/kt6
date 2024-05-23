@@ -1,0 +1,1 @@
+/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/bin/Debug/net7.0/publish/web.config

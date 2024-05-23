@@ -1,0 +1,63 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = web_new2
+build_property.RootNamespace = web_new2
+build_property.ProjectDir = /Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2
+build_property._RazorSourceGeneratorDebug = 
+
+[/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/Pages/Profile.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHJvZmlsZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/Pages/ProjectSettings.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHJvamVjdFNldHRpbmdzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/Pages/Projectssss.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHJvamVjdHNzc3MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/Pages/Users.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVXNlcnMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/Shared/SurveyPrompt.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL1N1cnZleVByb21wdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL01haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-58yl1v1gtc
+
+[/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/web_new2/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL05hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-jz6480vq9n

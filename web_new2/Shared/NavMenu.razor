@@ -1,0 +1,116 @@
+﻿@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@using System.IdentityModel.Tokens.Jwt
+@using System.Security.Claims
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">web_new2</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            @if (IsAuthenticated)
+            {
+                @if (IsAdmin)
+                {
+                    <NavLink class="nav-link" href="projectssss">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Проекты
+                    </NavLink>
+                    <NavLink class="nav-link" href="users">
+                        <span class="oi oi-person" aria-hidden="true"></span> Пользователи
+                    </NavLink>
+                    <NavLink class="nav-link" href="profile">
+                        <span class="oi oi-person" aria-hidden="true"></span> Профиль
+                    </NavLink>
+                    <NavLink class="nav-link" href="roles">
+                        <span class="oi oi-lock-locked" aria-hidden="true"></span> Роли
+                    </NavLink>
+                }
+                else
+                {
+                    <NavLink class="nav-link" href="projectssss">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Проекты
+                    </NavLink>
+                    <NavLink class="nav-link" href="profile">
+                        <span class="oi oi-person" aria-hidden="true"></span> Профиль
+                    </NavLink>
+                }
+
+                <NavLink class="nav-link" href="" @onclick="Logout">
+                    <span class="oi oi-account-logout" aria-hidden="true"></span> Выйти
+                </NavLink>
+
+            }
+            else
+            {
+                <NavLink class="nav-link" href="login">
+                    <span class="oi oi-plus" aria-hidden="true"></span> login
+                </NavLink>
+            }
+
+
+        </div>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private bool IsAuthenticated = false; // Установите в true, если пользователь авторизован
+    private bool IsAdmin = false; // Установите в true, если пользователь является администратором
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async Task Logout()
+    {
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "token");
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "role");
+        collapseNavMenu = true; // Закрыть меню
+        NavigationManager.NavigateTo("/");
+    }
+
+
+    private string ExtractRoleFromToken(string token)
+    {
+        JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+
+        // Получаем все claims из токена
+        var claims = jwtToken?.Claims;
+
+        // Находим claim с типом "role" и возвращаем его значение
+        var roleClaim = claims?.FirstOrDefault(c => c.Type == "role");
+        return roleClaim?.Value;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "token");
+        IsAuthenticated = !string.IsNullOrEmpty(token);
+
+        if (IsAuthenticated)
+        {
+            var role = ExtractRoleFromToken(token);
+            IsAdmin = role == "Админ";
+        }
+    }
+
+
+
+}

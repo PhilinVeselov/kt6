@@ -1,0 +1,129 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/kt6/kt6.csproj": {}
+  },
+  "projects": {
+    "/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/kt6/kt6.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/kt6/kt6.csproj",
+        "projectName": "kt6",
+        "projectPath": "/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/kt6/kt6.csproj",
+        "packagesPath": "/Users/phulaveselov/.nuget/packages/",
+        "outputPath": "/Users/phulaveselov/Desktop/учеба во вгуэсе/4семестр/ado/kt6/kt6/kt6/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/phulaveselov/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "/usr/local/share/dotnet/sdk/7.0.316/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Aspose.SVG.Drawing.SkiaSharp": {
+              "target": "Package",
+              "version": "[24.5.0, )"
+            },
+            "BCrypt.Net": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[7.0.17, )"
+            },
+            "Microsoft.AspNetCore.Razor": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "MigraDocCore.DocumentObjectModel": {
+              "target": "Package",
+              "version": "[1.3.63, )"
+            },
+            "MigraDocCore.Rendering": {
+              "target": "Package",
+              "version": "[1.3.63, )"
+            },
+            "NSec.Cryptography": {
+              "target": "Package",
+              "version": "[24.4.0, )"
+            },
+            "PDFsharp": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            },
+            "Syncfusion.Pdf.Net.Core": {
+              "target": "Package",
+              "version": "[25.2.3, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "bdnowicki.iTextSharp.LGPLv3.Core.net6": {
+              "target": "Package",
+              "version": "[3.4.18.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.316/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

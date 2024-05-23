@@ -1,0 +1,519 @@
+﻿@page "/project-settings/{projectId:int}"
+@inject HttpClient HttpClient
+@inject IJSRuntime JSRuntime
+@using Newtonsoft.Json
+@using System.Net.Http.Headers
+@using System.Threading.Tasks
+@using MudBlazor
+@using System.Text
+@using web_new2.Pages
+<style>
+    .section-header {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .loading {
+        font-style: italic;
+        color: #999;
+    }
+
+    .project-form {
+        max-width: 600px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .date-group {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .save-button, .add-user-button {
+        margin-top: 20px;
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-size: 18px;
+        transition: all 0.3s ease;
+    }
+
+        .save-button:hover, .add-user-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+    .user-section {
+        margin-bottom: 20px;
+    }
+
+    .add-user-form {
+        max-width: 400px;
+        margin-bottom: 15px;
+    }
+
+        .add-user-form h3 {
+            margin-bottom: 10px;
+        }
+
+    .user-list {
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .table th,
+        .table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+    .no-users {
+        font-style: italic;
+        color: #999;
+    }
+</style>
+<h3 class="section-header">Настройки проекта</h3>
+
+@if (Project == null)
+{
+    <p class="loading">Loading...</p>
+}
+else
+{
+    <div class="project-form">
+        <div class="form-group">
+            <label for="projectName">Название проекта</label>
+            <input id="projectName" class="form-control" @bind="@Project.projectName" />
+        </div>
+        <div class="form-group">
+            <label for="description">Описание</label>
+            <textarea id="description" class="form-control" @bind="@Project.description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="status">Статус</label>
+            <select id="status" class="form-control" @bind="@Project.status">
+                @foreach (var status in StatusOptions)
+                {
+                    <option value="@status">@status</option>
+                }
+            </select>
+        </div>
+        <div class="date-group">
+            <div class="form-group">
+                <label for="startDate">Дата начала</label>
+                <input id="startDate" type="date" class="form-control" @bind="@Project.startDate" />
+            </div>
+            <div class="form-group">
+                <label for="endDate">Дата окончания</label>
+                <input id="endDate" type="date" class="form-control" @bind="@Project.endDate" />
+            </div>
+        </div>
+        <MudButton class="save-button" Color="Color.Primary" Variant="Variant.Filled" @onclick="SaveProject">Сохранить</MudButton>
+    </div>
+}
+
+<MudDialog @ref="dialog" />
+<div class="add-user-form">
+    <div class="form-group">
+        <label for="userEmail">Email пользователя</label>
+        <input id="userEmail" type="email" class="form-control" @bind="NewUserEmail" placeholder="Введите email пользователя" />
+    </div>
+    <div class="form-group">
+        <label for="userRole">Роль пользователя</label>
+        <select id="userRole" class="form-control" @bind="@SelectedRole">
+            <option value="">Выберите роль</option>
+            @foreach (var role in RoleOptions)
+            {
+                <option value="@role.RoleId">@role.Name</option>
+            }
+        </select>
+    </div>
+    <MudButton class="add-user-button" Color="Color.Secondary" Variant="Variant.Outlined" @onclick="AddUserToProject">Добавить пользователя</MudButton>
+</div>
+
+<h3 class="section-header">Пользователи проекта</h3>
+
+
+@if (ProjectUsers == null)
+{
+    <p class="loading">Loading...</p>
+}
+else if (ProjectUsers.Any())
+{
+<div class="user-list">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Роль</th>
+                <th>Действие</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in ProjectUsers)
+            {
+                <tr>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.Role</td>
+                    <td>
+                        <!-- Кнопка удаления пользователя -->
+                        <button class="btn btn-danger" @onclick="@(() => RemoveUser(user.UserId))">Удалить</button>
+                        <!-- Выпадающий список для выбора новой роли пользователя -->
+                    </td>
+                    <td>
+                        <select @bind="@user.SelectedRole" class="form-control">
+                            @foreach (var role in RoleOptions)
+                            {
+                                <option value="@role.RoleId">@role.Name</option>
+                            }
+                        </select>
+                        <!-- Кнопка обновления роли пользователя -->
+                        <button class="btn btn-primary" @onclick="@(() => UpdateUserRole(user.UserId, user.SelectedRole))">Обновить роль</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+}
+else
+{
+    <p class="no-users">No users found.</p>
+}
+
+
+
+
+
+@code {
+    private List<RoleModel> RoleOptions = new List<RoleModel>();
+
+    private string[] StatusOptions = { "На рассмотрении", "Одобрен", "В процессе выполнения", "Отправлен на ревью", "Ревью пройдено", "Выполнен" };
+
+    private int projectId;
+    private ProjectModel Project;
+    private string originalStatus;
+
+
+    [Parameter]
+    public int ProjectId { get; set; }
+
+    private MudDialog dialog;
+
+    protected override async Task OnInitializedAsync()
+    {
+        projectId = ProjectId;
+        await LoadRoles();
+        await LoadProject();
+        await LoadProjectUsers(); // Добавляем загрузку пользователей после загрузки проекта
+    }
+    private List<ProjectUserModel> ProjectUsers;
+    private string NewUserEmail;
+    private int SelectedRole;
+    private async Task UpdateUserRole(int userId, int roleId)
+    {
+        try
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "token");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateUserRoleRequest
+            {
+                RoleId = roleId
+            };
+
+            var json = JsonConvert.SerializeObject(request);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await HttpClient.PutAsync($"https://localhost:7129/auth/update_user_role/{projectId}/{userId}", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                ShowDialog("Роль пользователя успешно обновлена.");
+                // После успешного обновления роли пользователя обновите список пользователей проекта
+                await LoadProjectUsers();
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                ShowDialog("Ошибка обновления роли пользователя: " + errorMessage);
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowDialog("Ошибка обновления роли пользователя: " + ex.Message);
+        }
+    }
+
+    private async Task RemoveUser(int userId)
+    {
+        try
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "token");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await HttpClient.DeleteAsync($"https://localhost:7129/auth/remove_user_from_project/{projectId}/{userId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                // После успешного удаления пользователя обновляем список пользователей проекта
+                await LoadProjectUsers();
+                ShowDialog("Пользователь успешно удален из проекта.");
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                ShowDialog("Ошибка удаления пользователя из проекта: " + errorMessage);
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowDialog("Ошибка удаления пользователя из проекта: " + ex.Message);
+        }
+    }
+
+    private async Task LoadRoles()
+    {
+        try
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "token");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await HttpClient.GetAsync("https://localhost:7129/auth/roles");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<RolesResponseModel>(content);
+
+                if (result.Status == "success")
+                {
+                    // Заполняем RoleOptions полученными ролями
+                    RoleOptions = result.Roles;
+                }
+                else
+                {
+                    ShowDialog("Ошибка при загрузке ролей. Статус: " + result.Status);
+                }
+            }
+            else
+            {
+                ShowDialog("Ошибка при загрузке ролей. Статус ответа: " + response.StatusCode);
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowDialog("Ошибка при загрузке ролей: " + ex.Message);
+        }
+    }
+    private async Task AddUserToProject()
+    {
+        try
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "token");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var request = new AddUserToProjectRequest
+            {
+                ProjectId = projectId,
+                Email = NewUserEmail,
+                RoleId = SelectedRole
+            };
+
+            var json = JsonConvert.SerializeObject(request);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            var response = await HttpClient.PostAsync("https://localhost:7129/auth/add_user_to_project", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                ShowDialog("Пользователь успешно добавлен в проект.");
+                // Обновить список пользователей проекта
+                await LoadProjectUsers();
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                ShowDialog("Ошибка при добавлении пользователя в проект: " + errorMessage);
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowDialog("Ошибка при добавлении пользователя в проект: " + ex.Message);
+        }
+    }
+
+
+    private async Task LoadProjectUsers()
+    {
+        try
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "token");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await HttpClient.GetAsync($"https://localhost:7129/auth/project_users/{projectId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<ProjectUsersResponseModel>(content);
+
+                if (result.Status == "success")
+                {
+                    ProjectUsers = result.Users;
+                }
+                else
+                {
+                    ShowDialog("Error loading project users. Status: " + result.Status);
+                }
+            }
+            else
+            {
+                ShowDialog("Error loading project users. Response status: " + response.StatusCode);
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowDialog("Error loading project users: " + ex.Message);
+        }
+    }
+
+    private async Task LoadProject()
+    {
+        try
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "token");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await HttpClient.GetAsync($"https://localhost:7129/auth/project/{projectId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<ProjectResponseModel>(content); // Изменение здесь
+
+                if (result != null)
+                {
+                    Project = result.Project;
+                    originalStatus = Project.status; // Сохраняем исходный статус проекта
+                    originalProjectName = Project.projectName; // Сохраняем исходное название проекта
+                    originalDescription = Project.description; // Сохраняем исходное описание проекта
+                    originalStartDate = Project.startDate; // Сохраняем исходную дату начала проекта
+                    originalEndDate = Project.endDate; // Сохраняем исходную дату окончания проекта
+                }
+                else
+                {
+                    ShowDialog("Error loading project. Result is null.");
+                }
+            }
+            else
+            {
+                ShowDialog("Error loading project. Response status: " + response.StatusCode);
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowDialog("Error loading project: " + ex.Message);
+        }
+    }
+
+    private string originalProjectName;
+    private string originalDescription;
+    private DateTime? originalStartDate;
+    private DateTime? originalEndDate;
+
+
+    private async Task SaveProject()
+    {
+        try
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "token");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            // Проверяем, изменился ли статус проекта или другие свойства
+            if (Project.status != originalStatus ||
+                Project.projectName != originalProjectName ||
+                Project.description != originalDescription ||
+                Project.startDate != originalStartDate ||
+                Project.endDate != originalEndDate)
+            {
+                // Создаем объект запроса на изменение проекта
+                var changeRequest = new ChangeProjectStatusRequest { Status = Project.status };
+
+                // Выполняем запрос на изменение статуса проекта только в случае изменения статуса
+                if (Project.status != originalStatus)
+                {
+                    var statusResponse = await HttpClient.PutAsync($"https://localhost:7129/auth/change_project_status/{projectId}", new StringContent(JsonConvert.SerializeObject(changeRequest), Encoding.UTF8, "application/json"));
+
+                    if (!statusResponse.IsSuccessStatusCode)
+                    {
+                        ShowDialog("Error changing project status: " + statusResponse.ReasonPhrase);
+                        return;
+                    }
+                }
+
+                // Выполняем запрос на редактирование проекта
+                var json = JsonConvert.SerializeObject(Project);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                var editResponse = await HttpClient.PutAsync($"https://localhost:7129/auth/edit_project/{projectId}", content);
+
+                if (editResponse.IsSuccessStatusCode)
+                {
+                    // Обновляем исходные свойства проекта
+                    originalProjectName = Project.projectName;
+                    originalDescription = Project.description;
+                    originalStartDate = Project.startDate;
+                    originalEndDate = Project.endDate;
+
+                    // Обновляем проект в UI
+                    await LoadProject();
+                    ShowDialog("Project saved successfully.");
+                }
+                else
+                {
+                    ShowDialog("Error saving project.");
+                }
+            }
+            else
+            {
+                // Если ничего не изменилось, просто обновляем проект в UI
+                await LoadProject();
+                ShowDialog("No changes made to the project.");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowDialog("Error saving project: " + ex.Message);
+        }
+    }
+
+
+    private void ShowDialog(string message)
+    {
+        dialog.Show(message);
+    }
+
+}
+
